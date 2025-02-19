@@ -1,16 +1,16 @@
-// api/server.js
 const express = require('express');
 const app = express();
 const transaccionRoutes = require('./routes/transaccionRoutes');
+const usuariosRoutes = require('./routes/usuariosRoutes');
+const categoriasRoutes = require('./routes/categoriasRoutes');
 const port = 3000;
 
-// Middleware para parsear JSON
 app.use(express.json());
 
-// Usar las rutas de transacciones
-app.use('/api', transaccionRoutes);
+app.use('/api/transacciones', transaccionRoutes);
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/categorias', categoriasRoutes);
 
-// Iniciar el servidor
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });

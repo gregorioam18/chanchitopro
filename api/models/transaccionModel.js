@@ -1,5 +1,5 @@
 // api/models/transaccionModel.js
-const connection = require('../config/db');
+const connection = require('../config/db.js');
 
 const Transaccion = {
     agregar: (datos, callback) => {

@@ -4,9 +4,9 @@ const router = express.Router();
 const transaccionController = require('../controllers/transaccionController');
 
 // Ruta para agregar una transacción
-router.post('/transacciones', transaccionController.agregarTransaccion);
+router.post('/', transaccionController.agregarTransaccion);
 
 // Ruta para obtener todas las transacciones
-router.get('/transacciones', transaccionController.obtenerTransacciones);
+router.get('/', transaccionController.obtenerTransacciones);
 
 module.exports = router;
