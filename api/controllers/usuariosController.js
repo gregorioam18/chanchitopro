@@ -55,4 +55,16 @@ const eliminarUsuario = (req, res) => {
     });
 };
 
+const loginUsuario = (req, res) => {
+    const { email, contraseña } = req.body;
+
+    Usuario.obtenerPorEmail(email, (err, usuario) => {
+        if (err) return res.status(500).json({ error: 'Error en el servidor' });
+        if (!usuario || usuario.contraseña !== contraseña) {
+            return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
+        }
+        res.json({ mensaje: 'Login exitoso', usuario });
+    });
+};
+
 module.exports = { obtenerUsuarios, obtenerUsuarioPorId, crearUsuario, actualizarUsuario, eliminarUsuario };

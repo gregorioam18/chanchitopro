@@ -15,15 +15,18 @@ const Usuario = {
         });
     },
 
+    obtenerPorEmail: (email, callback) => {
+        db.query('SELECT id, nombre, email FROM usuarios WHERE email = ?', [email], (err, results) => {
+            if (err) return callback(err, null);
+            callback(null, results[0]); // Retorna solo el primer usuario encontrado
+        });
+    },
+
     crear: (nuevoUsuario, callback) => {
         const { nombre, email, contraseña } = nuevoUsuario;
-        console.log('Datos para crear usuario:', { nombre, email, contraseña });
         db.query('INSERT INTO usuarios (nombre, email, contraseña) VALUES (?, ?, ?)',
             [nombre, email, contraseña], (err, results) => {
-                if (err) {
-                    console.error('Error en la consulta SQL:', err);
-                    return callback(err, null);
-                }
+                if (err) return callback(err, null);
                 callback(null, { id: results.insertId, ...nuevoUsuario });
             });
     },
