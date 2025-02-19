@@ -1,33 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChanchitoPro</title>
     <link rel="stylesheet" href="../assets/css/home.css">
 </head>
+
 <body>
     <main class="dashboard">
         <section class="saldo">
             <h2>Saldo Actual</h2>
             <div class="saldo-amount" id="saldo-amount">Cargando...</div>
+            <div class="saldo-buttons">
+                <button class="btn-ingreso" onclick="openModal('ingreso')">Cargar Ingreso</button>
+                <button class="btn-egreso" onclick="openModal('egreso')">Cargar Egreso</button>
+            </div>
         </section>
+
         <section class="transactions">
-            <!-- Aquí puedes agregar más contenido -->
+            <h2>Últimas Transacciones</h2>
+            <ul id="transaction-list">
+                <li>Cargando transacciones...</li>
+            </ul>
         </section>
+
+        <!-- Modal -->
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal">
+                <h2 id="modal-title">Cargar Transacción</h2>
+                <input type="number" id="modal-monto" placeholder="Monto" required>
+                <input type="text" id="modal-descripcion" placeholder="Descripción" required>
+                <input type="date" id="modal-fecha" required>
+
+                <label for="selectCategoria">Categoría:</label>
+                <select id="selectCategoria">
+                    <option value="" disabled selected>Seleccione una categoría</option>
+                </select>
+
+                <div class="modal-buttons">
+                    <button class="btn-save" onclick="guardarTransaccion()">Guardar</button>
+                    <button class="btn-close" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <script src="../assets/js/navbar.js"></script>
+    <script defer src="../assets/js/modal.js"></script>
+    <script defer src="../assets/js/navbar.js"></script>
+
     <script>
-        fetch('http://localhost:3000/api/transacciones/saldo')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('saldo-amount').textContent = `$${data.saldo_total}`;
-            })
-            .catch(error => {
-                console.error('Error obteniendo el saldo:', error);
-                document.getElementById('saldo-amount').textContent = 'Error al cargar saldo';
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtener saldo total
+            fetch('http://localhost:3000/api/transacciones/saldo')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('saldo-amount').textContent = `$${data.saldo_total}`;
+                })
+                .catch(error => {
+                    console.error('Error obteniendo el saldo:', error);
+                    document.getElementById('saldo-amount').textContent = 'Error al cargar saldo';
+                });
+
+            // Obtener y mostrar lista de transacciones
+            fetch('http://localhost:3000/api/transacciones')
+                .then(response => response.json())
+                .then(data => {
+                    const list = document.getElementById('transaction-list');
+                    list.innerHTML = ''; // Limpiar contenido previo
+
+                    data.forEach(transaccion => {
+                        const li = document.createElement('li');
+                        li.classList.add('transaction-item');
+                        li.innerHTML = `
+                            <span>${transaccion.fecha} - ${transaccion.descripcion}</span>
+                            <span class="${transaccion.tipo === 'egreso' ? 'egreso' : 'ingreso'}">
+                                ${transaccion.tipo === 'egreso' ? '-' : ''}$${transaccion.monto}
+                            </span>
+                        `;
+                        list.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error obteniendo transacciones:', error);
+                    document.getElementById('transaction-list').innerHTML = '<li>Error al cargar transacciones</li>';
+                });
+        });
     </script>
 </body>
+
 </html>

@@ -3,12 +3,16 @@ const Categorias = require('../models/categoriasModel.js');
 //Obtener todas las categorias
 const getAllCategories = async (req, res) => {
     try {
+        console.log('Petición recibida en /getAll');  // ✅ Paso 1: Ver si la petición llega
         const categorias = await Categorias.getAll();
+        console.log('Categorías obtenidas:', categorias);  // ✅ Paso 2: Ver qué devuelve la DB
         res.status(200).json(categorias);
     } catch (error) {
-        res.status(500).json({message: 'Error al obtener las categorias', error});
+        console.error('Error en getAllCategories:', error);  // ✅ Paso 3: Capturar error
+        res.status(500).json({ message: 'Error al obtener las categorías', error: error.message });
     }
 };
+
 
 //Obtener una categoria por ID
 const getCategoryById = async (req, res) => {
