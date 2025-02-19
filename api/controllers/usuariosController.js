@@ -1,5 +1,23 @@
 const Usuario = require('../models/usuariosModel');
 
+
+const loginUsuario = (req, res) => {
+    const { email, contraseña } = req.body;
+
+    Usuario.obtenerPorEmail(email, (err, usuario) => {
+        if (err) return res.status(500).json({ error: 'Error en el servidor' });
+        if (!usuario) return res.status(401).json({ error: 'Correo incorrecto' });
+
+        // Comparar contraseñas
+        if (usuario.contraseña !== contraseña) {
+            return res.status(401).json({ error: 'Contraseña incorrecta' });
+        }
+
+        res.json({ mensaje: 'Login exitoso', usuario });
+    });
+};
+
+
 const obtenerUsuarios = (req, res) => {
     Usuario.obtenerTodos((err, usuarios) => {
         if (err) return res.status(500).json({ error: 'Error al obtener usuarios' });
@@ -37,7 +55,6 @@ const crearUsuario = (req, res) => {
     });
 };
 
-
 const actualizarUsuario = (req, res) => {
     const { id } = req.params;
     const datosActualizados = req.body;
@@ -55,16 +72,5 @@ const eliminarUsuario = (req, res) => {
     });
 };
 
-const loginUsuario = (req, res) => {
-    const { email, contraseña } = req.body;
 
-    Usuario.obtenerPorEmail(email, (err, usuario) => {
-        if (err) return res.status(500).json({ error: 'Error en el servidor' });
-        if (!usuario || usuario.contraseña !== contraseña) {
-            return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
-        }
-        res.json({ mensaje: 'Login exitoso', usuario });
-    });
-};
-
-module.exports = { obtenerUsuarios, obtenerUsuarioPorId, crearUsuario, actualizarUsuario, eliminarUsuario };
+module.exports = { obtenerUsuarios, obtenerUsuarioPorId, crearUsuario, actualizarUsuario, eliminarUsuario, loginUsuario };

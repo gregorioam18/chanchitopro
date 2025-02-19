@@ -4,22 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChanchitoPro</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="../assets/css/home.css">
 </head>
 <body>
     <main class="dashboard">
-        <section class="capital">
-            <h2>Capital Actual</h2>
-            <div class="capital-amount">$653441654141</div>
+        <section class="saldo">
+            <h2>Saldo Actual</h2>
+            <div class="saldo-amount" id="saldo-amount">Cargando...</div>
         </section>
         <section class="transactions">
             <!-- Aquí puedes agregar más contenido -->
         </section>
     </main>
 
-    <script src="script.js"></script>
-
-    <script src="navbar.js"></script>
-
+    <script src="../assets/js/navbar.js"></script>
+    <script>
+        fetch('http://localhost:3000/api/transacciones/saldo')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('saldo-amount').textContent = `$${data.saldo_total}`;
+            })
+            .catch(error => {
+                console.error('Error obteniendo el saldo:', error);
+                document.getElementById('saldo-amount').textContent = 'Error al cargar saldo';
+            });
+    </script>
 </body>
 </html>

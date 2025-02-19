@@ -29,12 +29,14 @@
 
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        console.log('📧', email)
+        console.log('🔑', password)
 
         try {
-            const respuesta = await fetch('http://localhost:3000/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, contraseña: password }) 
+            const respuesta = await fetch('http://localhost:3000/api/usuarios/login', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, contraseña: password })  // 🔹 Ahora coincide con el backend
             });
 
             const datos = await respuesta.json();
@@ -42,14 +44,18 @@
             if (respuesta.ok) {
                 document.getElementById('mensaje').textContent = 'Inicio de sesión exitoso';
                 document.getElementById('mensaje').style.color = 'green';
-                localStorage.setItem('usuario', JSON.stringify(datos));
-                window.location.href = 'dashboard.html'; // Redirigir al usuario
+
+                // 🔹 Guardar solo el nombre en localStorage
+                localStorage.setItem('usuario', datos.usuario.nombre);
+
+                 // 🔹 Redirigir al usuario
+                 window.location.href = 'pages/home.html' // 🔹 Redirigir al usuario
             } else {
-                document.getElementById('mensaje').textContent = 'Correo o contraseña incorrectos';
+                document.getElementById('mensaje').textContent = datos.error || 'Correo o contraseña incorrectos';
                 document.getElementById('mensaje').style.color = 'red';
             }
         } catch (error) {
-            console.error('Error en la solicitud:', error);
+            console.error('❌ Error en la solicitud:', error);
             document.getElementById('mensaje').textContent = 'Error de conexión con el servidor';
             document.getElementById('mensaje').style.color = 'red';
         }

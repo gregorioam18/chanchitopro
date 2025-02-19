@@ -16,11 +16,12 @@ const Usuario = {
     },
 
     obtenerPorEmail: (email, callback) => {
-        db.query('SELECT id, nombre, email FROM usuarios WHERE email = ?', [email], (err, results) => {
+        db.query('SELECT id, nombre, email, contraseña FROM usuarios WHERE email = ?', [email], (err, results) => {
             if (err) return callback(err, null);
-            callback(null, results[0]); // Retorna solo el primer usuario encontrado
+            callback(null, results.length > 0 ? results[0] : null);
         });
     },
+    
 
     crear: (nuevoUsuario, callback) => {
         const { nombre, email, contraseña } = nuevoUsuario;
