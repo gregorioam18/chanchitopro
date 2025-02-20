@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Agregar evento al botón de cerrar sesión
     document.getElementById("logout").addEventListener("click", function() {
         localStorage.removeItem("usuario"); // Eliminar usuario de localStorage
-        window.location.href = "login.html"; // Redirigir al login
+        window.location.href = ".../public/index.html"; // Redirigir al index.html
     });
 });
 

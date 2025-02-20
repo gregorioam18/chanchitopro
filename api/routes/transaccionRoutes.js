@@ -11,4 +11,7 @@ router.get('/', transaccionController.obtenerTransacciones);
 // Ruta para obtener el saldo total
 router.get('/saldo', transaccionController.obtenerSaldoTotal);
 
+// Ruta para obtener todas las transacciones ordenadas por fecha
+router.get('/ordenadas', transaccionController.obtenerTransaccionesOrdenadas);
+
 module.exports = router;

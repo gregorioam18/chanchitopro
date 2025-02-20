@@ -11,7 +11,7 @@ const Transaccion = {
             VALUES ?
         `;
 
-        const values = datos.map(t => [t.usuario_id, t.categoria_id, t.tipo, t.monto, t.descripcion, t.fecha]);
+        const values = datos.map(t => [t.usuarioId, t.categoriaId, t.tipo, t.monto, t.descripcion, new Date(t.fecha).toISOString().slice(0, 19).replace('T', ' ')]);
 
         connection.query(query, [values], callback);
     },
@@ -32,8 +32,12 @@ const Transaccion = {
             if (err) return callback(err, null);
             callback(null, results[0].saldo_total || 0);
         });
+    },
+
+    obtenerTodasOrdenadas: (callback) => {
+        const query = 'SELECT * FROM transacciones ORDER BY fecha DESC';
+        connection.query(query, callback);
     }
-    
 };
 
 module.exports = Transaccion;

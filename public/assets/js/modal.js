@@ -42,25 +42,46 @@ function obtenerUsuarioId() {
 }
 
 
+
+function usarFechaHoraActual() {
+    const ahora = new Date();
+
+    // Formatear la fecha como 'YYYY-MM-DD' (formato de input type="date")
+    const fechaActual = ahora.toISOString().split('T')[0];
+
+    // Formatear la hora como 'HH:MM' (formato de input type="time")
+    const horaActual = ahora.toTimeString().split(' ')[0].slice(0, 5);
+
+    // Asignar la fecha y hora actual a los campos
+    document.getElementById('modal-fecha').value = fechaActual;
+    document.getElementById('modal-hora').value = horaActual;
+}
+
+
+
 function guardarTransaccion() {
     const monto = document.getElementById('modal-monto').value;
     const descripcion = document.getElementById('modal-descripcion').value;
     const fecha = document.getElementById('modal-fecha').value;
+    const hora = document.getElementById('modal-hora').value;
     const categoriaId = document.getElementById('selectCategoria').value;
-    const usuarioId = obtenerUsuarioId(); // 🔥 Obtenemos el ID del usuario
+    const usuarioId = obtenerUsuarioId();
 
-    if (!monto || isNaN(monto) || !descripcion || !fecha || !categoriaId || !usuarioId) {
+    if (!monto || isNaN(monto) || !descripcion || !fecha || !hora || !categoriaId || !usuarioId) {
         alert('Todos los campos son obligatorios y el monto debe ser un número válido.');
         return;
     }
 
+    // Combinar fecha y hora en un solo valor DATETIME
+    const fechaHora = `${fecha}T${hora}:00.000Z`;
+
     const transaccion = {
         monto: parseFloat(monto),
         descripcion,
-        fecha,
+        fecha: fechaHora, // Usamos la fecha y hora combinadas
         categoriaId: parseInt(categoriaId),
-        usuarioId: parseInt(usuarioId), // 🔥 Asegurar que es un número
-        tipo: tipoTransaccion // Se usa el tipo asignado en openModal()
+        usuarioId: parseInt(usuarioId),
+        tipo: tipoTransaccion
     };
 
     console.log('Guardando transacción:', transaccion);
@@ -69,7 +90,7 @@ function guardarTransaccion() {
     fetch('http://localhost:3000/api/transacciones', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify([transaccion]) // 🔥 Envolvemos en un array
+        body: JSON.stringify([transaccion])
     })
     .then(response => response.json())
     .then(data => {
@@ -78,6 +99,7 @@ function guardarTransaccion() {
         } else {
             alert('Transacción guardada con éxito');
             closeModal();
+            location.reload(); // Recargar la página para actualizar la lista
         }
     })
     .catch(error => console.error('Error guardando transacción:', error));

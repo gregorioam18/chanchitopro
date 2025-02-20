@@ -26,13 +26,22 @@
             </ul>
         </section>
 
-        <!-- Modal -->
+        <!-- Modal para cargar transacciones -->
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal">
                 <h2 id="modal-title">Cargar Transacción</h2>
                 <input type="number" id="modal-monto" placeholder="Monto" required>
                 <input type="text" id="modal-descripcion" placeholder="Descripción" required>
+
+                <!-- Campo para fecha y hora -->
+                <label for="modal-fecha">Fecha:</label>
                 <input type="date" id="modal-fecha" required>
+
+                <label for="modal-hora">Hora:</label>
+                <input type="time" id="modal-hora" required>
+
+                <!-- Botón para usar fecha y hora actual -->
+                <button class="btn-actual" onclick="usarFechaHoraActual()">Usar fecha y hora actual</button>
 
                 <label for="selectCategoria">Categoría:</label>
                 <select id="selectCategoria">
@@ -42,6 +51,24 @@
                 <div class="modal-buttons">
                     <button class="btn-save" onclick="guardarTransaccion()">Guardar</button>
                     <button class="btn-close" onclick="closeModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Modal de detalles de la transacción -->
+        <div class="modal-overlay" id="details-modal-overlay">
+            <div class="modal">
+                <h2 id="details-modal-title">Detalles de la Transacción</h2>
+                <p><strong>Fecha:</strong> <span id="details-fecha"></span></p>
+                <p><strong>Hora:</strong> <span id="details-hora"></span></p> <!-- Nuevo campo para la hora -->
+                <p><strong>Descripción:</strong> <span id="details-descripcion"></span></p>
+                <p><strong>Monto:</strong> <span id="details-monto"></span></p>
+                <p><strong>Tipo:</strong> <span id="details-tipo"></span></p>
+                <p><strong>Categoría:</strong> <span id="details-categoria"></span></p>
+                <p><strong>Creado por:</strong> <span id="details-usuario"></span></p>
+                <div class="modal-buttons">
+                    <button class="btn-close" onclick="closeDetailsModal()">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -63,8 +90,8 @@
                     document.getElementById('saldo-amount').textContent = 'Error al cargar saldo';
                 });
 
-            // Obtener y mostrar lista de transacciones
-            fetch('http://localhost:3000/api/transacciones')
+            // Obtener y mostrar lista de transacciones ordenadas
+            fetch('http://localhost:3000/api/transacciones/ordenadas') // 🔥 Usar la ruta /ordenadas
                 .then(response => response.json())
                 .then(data => {
                     const list = document.getElementById('transaction-list');
@@ -73,12 +100,26 @@
                     data.forEach(transaccion => {
                         const li = document.createElement('li');
                         li.classList.add('transaction-item');
+
+                        // Formatear la fecha
+                        const fechaFormateada = new Date(transaccion.fecha).toLocaleDateString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                        });
+
                         li.innerHTML = `
-                            <span>${transaccion.fecha} - ${transaccion.descripcion}</span>
-                            <span class="${transaccion.tipo === 'egreso' ? 'egreso' : 'ingreso'}">
-                                ${transaccion.tipo === 'egreso' ? '-' : ''}$${transaccion.monto}
-                            </span>
-                        `;
+                    <span>${fechaFormateada} - ${transaccion.descripcion}</span>
+                    <span class="${transaccion.tipo === 'egreso' ? 'egreso' : 'ingreso'}">
+                        ${transaccion.tipo === 'egreso' ? '-' : ''}$${transaccion.monto}
+                    </span>
+                `;
+
+                        // Agregar evento de clic a la transacción
+                        li.addEventListener('click', () => {
+                            openDetailsModal(transaccion);
+                        });
+
                         list.appendChild(li);
                     });
                 })
@@ -87,6 +128,65 @@
                     document.getElementById('transaction-list').innerHTML = '<li>Error al cargar transacciones</li>';
                 });
         });
+
+        // Función para abrir el modal de detalles
+        async function openDetailsModal(transaccion) {
+            const modal = document.getElementById('details-modal-overlay');
+            console.log('Obteniendo usuario:', transaccion.usuario_id);
+
+            // Formatear la fecha y la hora
+            const fechaFormateada = new Date(transaccion.fecha).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            });
+
+            const horaFormateada = new Date(transaccion.fecha).toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            });
+
+            // Llenar el modal con los datos de la transacción
+            document.getElementById('details-fecha').textContent = fechaFormateada;
+            document.getElementById('details-hora').textContent = horaFormateada; // Mostrar la hora
+            document.getElementById('details-descripcion').textContent = transaccion.descripcion;
+            document.getElementById('details-monto').textContent = `$${transaccion.monto}`;
+            document.getElementById('details-tipo').textContent = transaccion.tipo === 'ingreso' ? 'Ingreso' : 'Egreso';
+
+            // Obtener la categoría de la transacción
+            try {
+                const response = await fetch(`http://localhost:3000/api/categorias/getById/${transaccion.categoria_id}`);
+                const categoria = await response.json();
+                console.log(categoria);
+                // Mostrar el nombre de la categoria en el modal
+                document.getElementById('details-categoria').textContent = categoria.nombre || 'Sin categoría';
+            } catch (error) {
+                console.error('Error obteniendo categoria:', error);
+                document.getElementById('details-categoria').textContent = 'Error al cargar la categoría';
+            }
+
+            // Obtener el usuario que creó la transacción
+            try {
+                const response = await fetch(`http://localhost:3000/api/usuarios/${transaccion.usuario_id}`);
+                const usuario = await response.json();
+
+                // Mostrar el nombre del usuario en el modal
+                document.getElementById('details-usuario').textContent = usuario.nombre || 'Usuario desconocido';
+            } catch (error) {
+                console.error('Error obteniendo el usuario:', error);
+                document.getElementById('details-usuario').textContent = 'Error al cargar el usuario';
+            }
+
+            // Mostrar el modal
+            modal.style.display = 'block';
+        }
+
+        // Función para cerrar el modal de detalles
+        function closeDetailsModal() {
+            const modal = document.getElementById('details-modal-overlay');
+            modal.style.display = 'none';
+        }
     </script>
 </body>
 

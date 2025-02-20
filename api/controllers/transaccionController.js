@@ -35,8 +35,18 @@ const obtenerSaldoTotal = (req, res) => {
     });
 };
 
+const obtenerTransaccionesOrdenadas = (req, res) => {
+    Transaccion.obtenerTodasOrdenadas((err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.status(200).json(results);
+    });
+};
+
 module.exports = {
     agregarTransaccion,
     obtenerTransacciones,
-    obtenerSaldoTotal
+    obtenerSaldoTotal,
+    obtenerTransaccionesOrdenadas
 };

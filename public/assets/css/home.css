@@ -73,12 +73,22 @@ body {
 .transaction-item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 12px 15px;
     background: #f4f4f4;
     margin-bottom: 10px;
     border-radius: 8px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover para las transacciones */
+.transaction-item:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-3px);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Estilo para ingresos y egresos */
@@ -91,9 +101,6 @@ body {
     color: red;
     font-weight: bold;
 }
-
-
-
 
 /* Botones de carga */
 .saldo-buttons {
@@ -129,12 +136,7 @@ body {
     opacity: 0.9;
 }
 
-
-
-
-
-
-/* Fondo oscurecido del modal */
+/* Estilos generales del modal */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -147,7 +149,6 @@ body {
     z-index: 1000;
 }
 
-/* Contenedor del modal */
 .modal {
     background: white;
     width: 90%;
@@ -163,30 +164,48 @@ body {
     z-index: 1001;
 }
 
+/* Título del modal */
+.modal h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #2c356b;
+}
+
 /* Campos del formulario */
-.modal input {
+.modal input,
+.modal select {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+    box-sizing: border-box;
 }
 
-/* Botones dentro del modal */
+/* Etiqueta del select */
+.modal label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    font-size: 1em;
+    color: #333;
+}
+
+/* Botones del modal */
 .modal-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .modal-buttons button {
-    padding: 10px 15px;
+    padding: 10px 20px;
     font-size: 1em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .btn-save {
@@ -200,13 +219,35 @@ body {
 }
 
 .modal-buttons button:hover {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
+/* Estilos para el botón "Usar fecha y hora actual" */
+.btn-actual {
+    background-color: #6c7eb7;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0;
+    font-size: 0.9em;
+}
 
+.btn-actual:hover {
+    background-color: #5a6ca3;
+}
 
-
-
+/* Estilos para los campos de fecha y hora */
+input[type="date"],
+input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
 
 /* Estilos para el navbar */
 .navbar {
