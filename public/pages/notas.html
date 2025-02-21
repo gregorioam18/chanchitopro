@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas</title>
+    <link rel="stylesheet" href="../assets/css/notas.css">
+    <script defer src="../assets/js/notas.js"></script>
+</head>
+
+<script defer src="../assets/js/navbar.js"></script>
+
+<body>
+    <header>
+        <h1>Mis Notas</h1>
+        <button id="btnAgregarNota">+ Nueva Nota</button>
+    </header>
+
+    <main>
+        <div class="notas-container" id="notasContainer">
+            <!-- Las notas se generarán dinámicamente aquí -->
+        </div>
+    </main>
+
+    <!-- Modal para agregar notas -->
+    <div id="modalNota" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Agregar Nota</h2>
+            <input type="text" id="tituloNota" placeholder="Título">
+            <textarea id="contenidoNota" placeholder="Escribe tu nota..."></textarea>
+            <button id="guardarNota">Guardar</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -4,11 +4,12 @@ const cors = require('cors');
 const transaccionRoutes = require('./routes/transaccionRoutes');
 const usuariosRoutes = require('./routes/usuariosRoutes');
 const categoriasRoutes = require('./routes/categoriasRoutes');
+const notasRoutes = require('./routes/notasRoutes');
 
 const app = express();
 const port = 3000;
 
-// 🔹 Configurar CORS para permitir solo el frontend en localhost
+// 🔹 Middleware para habilitar CORS
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/api/transacciones', transaccionRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/categorias', categoriasRoutes);
+app.use('/api/notas', notasRoutes);
 
 // 🔹 Manejo de rutas no encontradas
 app.use((req, res, next) => {
