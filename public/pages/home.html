@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChanchitoPro</title>
+    <title>Administracion Herencia Matera</title>
     <link rel="stylesheet" href="../assets/css/home.css">
 </head>
 
@@ -68,6 +68,7 @@
                 <p><strong>Categoría:</strong> <span id="details-categoria"></span></p>
                 <p><strong>Creado por:</strong> <span id="details-usuario"></span></p>
                 <div class="modal-buttons">
+                    <button class="btn-delete" onclick="eliminarTransaccion()">Eliminar</button>
                     <button class="btn-close" onclick="closeDetailsModal()">Cerrar</button>
                 </div>
             </div>
@@ -133,6 +134,7 @@
         async function openDetailsModal(transaccion) {
             const modal = document.getElementById('details-modal-overlay');
             console.log('Obteniendo usuario:', transaccion.usuario_id);
+            document.getElementById('details-modal-overlay').setAttribute('data-transaccion-id', transaccion.id);
 
             // Formatear la fecha y la hora
             const fechaFormateada = new Date(transaccion.fecha).toLocaleDateString('es-ES', {

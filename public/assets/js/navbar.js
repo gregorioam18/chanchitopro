@@ -5,13 +5,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Plantilla del navbar con el usuario dinámico
     const navbar = `
         <nav class="navbar">
-            <h1 class="logo">ChanchitoPro</h1>
+            <h1 class="logo">Administración Herencia Matera</h1>
             <div class="user-info">
                 <span class="username">👤 ${usuario}</span> <!-- Nombre dinámico -->
                 <button class="menu-button" onclick="toggleMenu()">☰</button>
                 <div class="dropdown-menu" id="dropdownMenu">
                     <ul>
-                        <li><a href="#">Perfil</a></li>
+                        <li><a href="/pages/home.html">Inicio</a></li>
+                        <li><a href="/pages/perfil.html">Perfil</a></li>
                         <li><a href="ingresos.html">Ingresos</a></li>
                         <li><a href="#">Egresos</a></li>
                         <li><button id="logout">Cerrar Sesión</button></li> <!-- Botón logout -->
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Agregar evento al botón de cerrar sesión
     document.getElementById("logout").addEventListener("click", function() {
         localStorage.removeItem("usuario"); // Eliminar usuario de localStorage
-        window.location.href = ".../public/index.html"; // Redirigir al index.html
+        window.location.href = "/index.html";// Redirigir al index.html
     });
 });
 

@@ -37,6 +37,11 @@ const Transaccion = {
     obtenerTodasOrdenadas: (callback) => {
         const query = 'SELECT * FROM transacciones ORDER BY fecha DESC';
         connection.query(query, callback);
+    },
+
+    eliminar: (id, callback) => {
+        const query = 'DELETE FROM transacciones WHERE id = ?';
+        connection.query(query, [id], callback);
     }
 };
 

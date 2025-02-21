@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const transaccionController = require('../controllers/transaccionController');
 
+// Ruta para eliminar una transacción
+router.delete('/:id', transaccionController.eliminarTransaccion);
+
 // Ruta para agregar una transacción
 router.post('/', transaccionController.agregarTransaccion);
 

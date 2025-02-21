@@ -104,3 +104,37 @@ function guardarTransaccion() {
     })
     .catch(error => console.error('Error guardando transacción:', error));
 }
+
+
+
+async function eliminarTransaccion() {
+    const transaccionId = document.getElementById('details-modal-overlay').getAttribute('data-transaccion-id');
+
+    if (!transaccionId) {
+        alert('Error: No se encontró el ID de la transacción.');
+        return;
+    }
+
+    const confirmacion = confirm('¿Estás seguro de que querés eliminar esta transacción? Esta acción no se puede deshacer.');
+
+    if (!confirmacion) return;
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/transacciones/${transaccionId}`, {
+            method: 'DELETE',
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            alert('Error al eliminar la transacción: ' + data.error);
+        } else {
+            alert('Transacción eliminada con éxito');
+            closeDetailsModal();
+            location.reload(); // Recargar para actualizar la lista de transacciones
+        }
+    } catch (error) {
+        console.error('Error eliminando la transacción:', error);
+        alert('Error al eliminar la transacción.');
+    }
+}

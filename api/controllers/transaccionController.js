@@ -44,9 +44,21 @@ const obtenerTransaccionesOrdenadas = (req, res) => {
     });
 };
 
+const eliminarTransaccion = (req, res) => {
+    const { id } = req.params;
+
+    Transaccion.eliminar(id, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.status(200).json({ message: "Transacción eliminada correctamente" });
+    });
+};
+
 module.exports = {
     agregarTransaccion,
     obtenerTransacciones,
     obtenerSaldoTotal,
-    obtenerTransaccionesOrdenadas
+    obtenerTransaccionesOrdenadas,
+    eliminarTransaccion
 };
